@@ -1,4 +1,5 @@
 import jester
+import strutils
 import db_sqlite
 import ./db_schema
 
@@ -25,10 +26,13 @@ proc clickNext(from_user: string): string =
     return next
 
 proc serveUserBadge(username: string): string =
+    let tmpl = readfile("badge.svg.tmpl")
     let row = db.getRow(sql"SELECT username, views FROM Users WHERE username = ?;", username)
     let badge = "This is " & username & "'s badge. <br> They have " & row[1] & " views. How cool!" &
                 "<br><a href='/u/" & username & "/next'>See another!</a>"
-    return badge 
+    var output = replace(tmpl, "$username", row[0])
+    output  = replace(output, "$views", row[1])
+    return output
 
 routes:
     get "/":
@@ -37,7 +41,8 @@ routes:
         redirect("/u/" & getRandomUser())
     get "/u/@username":
         recordView(@"username")
-        resp serveUserBadge(@"username")
+        #resp serveUserBadge(@"username")
+        resp(Http200, serveUserBadge(@"username"), contentType="image/svg+xml")
     get "/u/@username/next":
         redirect("/u/" & clickNext(@"username"))
 
