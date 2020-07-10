@@ -32,7 +32,7 @@ proc serveUserBadge(username: string): string =
 
 routes:
     get "/":
-        resp "hello"
+        resp "Get a CodeRing!"
     get "/random":
         redirect("/u/" & getRandomUser())
     get "/u/@username":
