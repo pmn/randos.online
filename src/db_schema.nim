@@ -6,7 +6,7 @@ proc init_db*(db: DbConn) =
                             username VARCHAR(50) PRIMARY KEY UNIQUE, 
                             is_active INTEGER(1) default 1, 
                             views INTEGER(10) default 1,
-                            created_at INTEGER(4) not null default (strftime('%s','now'))
+                            created_at INTEGER(4) not null default (strftime('%s', 'now'))
                         )""")
 
     db.exec(sql"""create table if not exists 
@@ -21,7 +21,7 @@ proc init_db*(db: DbConn) =
                         Clicks (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             username VARCHAR(50) not null,
-                            redirected_to_user VARCHAR(50) not null,
+                            next_user VARCHAR(50) not null,
                             clicked_at INTEGER(4) not null default (strftime('%s', 'now')),
                             FOREIGN KEY(username) REFERENCES Users(username)
                         )""")
