@@ -26,10 +26,8 @@ proc clickNext(from_user: string): string =
     return next
 
 proc serveUserBadge(username: string): string =
-    let tmpl = readfile("badge.svg.tmpl")
+    let tmpl = readfile("badge_small.svg.tmpl")
     let row = db.getRow(sql"SELECT username, views FROM Users WHERE username = ?;", username)
-    let badge = "This is " & username & "'s badge. <br> They have " & row[1] & " views. How cool!" &
-                "<br><a href='/u/" & username & "/next'>See another!</a>"
     var output = replace(tmpl, "$username", row[0])
     output  = replace(output, "$views", row[1])
     return output
@@ -42,7 +40,7 @@ routes:
     get "/u/@username":
         recordView(@"username")
         #resp serveUserBadge(@"username")
-        resp(Http200, serveUserBadge(@"username"), contentType="image/svg+xml")
+        resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username"))
     get "/u/@username/next":
         redirect("/u/" & clickNext(@"username"))
 
