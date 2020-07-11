@@ -26,7 +26,7 @@ proc clickNext(from_user: string): string =
     return next
 
 proc serveUserBadge(username: string): string =
-    let tmpl = readfile("badge_small.svg.tmpl")
+    let tmpl = readfile("badge.svg.tmpl")
     let row = db.getRow(sql"SELECT username, views FROM Users WHERE username = ?;", username)
     var output = replace(tmpl, "$username", row[0])
     output  = replace(output, "$views", row[1])
