@@ -1,4 +1,3 @@
-import logging
 import jester
 import strutils
 import db_sqlite
@@ -41,7 +40,10 @@ proc renderIndex(): string =
 proc renderBadge(theme: string): string =
     let tmpl = readfile("badge.svg.tmpl")
     let colors = themes.getTheme(theme)
-    result = multiReplace(tmpl, [("$background", colors.background), ("$textColor", colors.text), ("$brandColor", colors.brand)])
+    result = multiReplace(tmpl, [("$background", colors.background), 
+                                    ("$textColor", colors.text), 
+                                    ("$brandColor", colors.brand),
+                                    ("$brandTextColor", colors.brandtext)])
     
 proc serveUserBadge(username: string, theme="default"): string =
     let tmpl = renderBadge(theme)
@@ -59,7 +61,7 @@ routes:
         var theme = "default"
         if request.params.hasKey("theme"):
             theme = request.params["theme"]
-            
+
         recordView(@"username")
         resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username", theme))
     get "/u/@username/next":

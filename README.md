@@ -14,8 +14,9 @@ Here's mine!
 
 [![pmn's badge](https://www.randos.online/u/pmn)](https://randos.online/u/pmn/next)
 
+## Configuration
+  * **Theme:** choose a color theme by including `?theme=color` after your username. 
+Current color options are `blue`, `red`, `green`, and `hotdog`.
+
 ## Contributing
 randos.online is Open Source Software. To make changes, please submit a Pull Request! 
-
-## Configuration
-There's no configuration at this time...
