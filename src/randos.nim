@@ -42,7 +42,7 @@ routes:
         #resp serveUserBadge(@"username")
         resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username"))
     get "/u/@username/next":
-        redirect("/u/" & clickNext(@"username"))
+        redirect("https://github.com/" & clickNext(@"username"))
 
 runForever()
 db.close()
