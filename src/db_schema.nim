@@ -3,7 +3,7 @@ import db_sqlite
 proc init_db*(db: DbConn) = 
     db.exec(sql"""create table if not exists 
                         Users (
-                            username VARCHAR(50) PRIMARY KEY UNIQUE, 
+                            username VARCHAR(50) PRIMARY KEY UNIQUE COLLATE NOCASE, 
                             is_active INTEGER(1) default 1, 
                             views INTEGER(10) default 1,
                             created_at INTEGER(4) not null default (strftime('%s', 'now'))
