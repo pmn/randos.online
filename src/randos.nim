@@ -27,7 +27,7 @@ proc clickNext(from_user: string): string =
 
 proc recentRandos(count: int): string =
     var items = "" # A flat string of list items containing recent users"
-    for row in db.rows(sql"SELECT username, views from Users ORDER BY created_at DESC LIMIT ?;", count):
+    for row in db.rows(sql"SELECT username, views from Users WHERE is_active=1 ORDER BY created_at DESC LIMIT ?;", count):
         items = items & "<li><a href='https://github.com/$1'>$1</a></li>" % row[0]
     return items
 
