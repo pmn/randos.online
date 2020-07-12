@@ -25,6 +25,17 @@ proc clickNext(from_user: string): string =
         dbError(db)
     return next
 
+proc recentRandos(count: int): string =
+    var items = "" # A flat string of list items containing recent users"
+    for row in db.rows(sql"SELECT username, views from Users ORDER BY created_at DESC LIMIT ?;", count):
+        items = items & "<li><a href='https://github.com/$1'>$1</a></li>" % row[0]
+    return items
+
+proc renderIndex(): string =
+    let tmpl = readfile("index.html")
+    let recentRandos = recentRandos(25)
+    result = replace(tmpl, "$recent", recentRandos)
+
 proc serveUserBadge(username: string): string =
     let tmpl = readfile("badge.svg.tmpl")
     let row = db.getRow(sql"SELECT username, views FROM Users WHERE username = ?;", username)
@@ -34,7 +45,7 @@ proc serveUserBadge(username: string): string =
 
 routes:
     get "/":
-        resp readfile("index.html")
+        resp renderIndex()
     get "/random":
         redirect("https://github.com/" & getRandomUser())
     get "/u/@username":
