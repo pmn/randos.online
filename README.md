@@ -8,6 +8,8 @@ To add your profile to the list, just include this markdown in your profile's RE
 
 (Make sure to replace `yourusername` with your GitHub username in both spots).
 
+When visitors click your badge, they'll be directed to another random GitHub user who also has the badge (and other profile clicks will lead to yours). 
+
 Here's mine! 
 
 [![pmn's badge](https://www.randos.online/u/pmn)](https://randos.online/u/pmn/next)
