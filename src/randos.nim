@@ -1,7 +1,9 @@
+import logging
 import jester
 import strutils
 import db_sqlite
 import ./db_schema
+import ./themes
 
 # Setup
 let db = open("ring.db", "", "", "")
@@ -36,8 +38,13 @@ proc renderIndex(): string =
     let recentRandos = recentRandos(25)
     result = replace(tmpl, "$recent", recentRandos)
 
-proc serveUserBadge(username: string): string =
+proc renderBadge(theme: string): string =
     let tmpl = readfile("badge.svg.tmpl")
+    let colors = themes.getTheme(theme)
+    result = multiReplace(tmpl, [("$background", colors.background), ("$textColor", colors.text), ("$brandColor", colors.brand)])
+    
+proc serveUserBadge(username: string, theme="default"): string =
+    let tmpl = renderBadge(theme)
     let row = db.getRow(sql"SELECT username, views FROM Users WHERE username = ?;", username)
     var output = replace(tmpl, "$username", row[0])
     output  = replace(output, "$views", row[1])
@@ -49,8 +56,12 @@ routes:
     get "/random":
         redirect("https://github.com/" & getRandomUser())
     get "/u/@username":
+        var theme = "default"
+        if request.params.hasKey("theme"):
+            theme = request.params["theme"]
+            
         recordView(@"username")
-        resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username"))
+        resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username", theme))
     get "/u/@username/next":
         redirect("https://github.com/" & clickNext(@"username"))
 
