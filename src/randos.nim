@@ -36,10 +36,9 @@ routes:
     get "/":
         resp readfile("index.html")
     get "/random":
-        redirect("/u/" & getRandomUser())
+        redirect("https://github.com/" & getRandomUser())
     get "/u/@username":
         recordView(@"username")
-        #resp serveUserBadge(@"username")
         resp(Http200, [("Content-Type", "image/svg+xml"), ("Cache-Control", "no-cache")], serveUserBadge(@"username"))
     get "/u/@username/next":
         redirect("https://github.com/" & clickNext(@"username"))
